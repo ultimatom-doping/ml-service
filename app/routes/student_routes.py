@@ -11,7 +11,7 @@ async def list_students():
     return await get_all_students()
 
 @router.get("/students/{student_id}")
-async def retrieve_student(student_id: str):
+async def retrieve_student(student_id: int):
     student = await get_student_by_id(student_id)
     if not student:
         raise HTTPException(status_code=404, detail="Student not found")

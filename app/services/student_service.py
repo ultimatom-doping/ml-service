@@ -7,9 +7,8 @@ async def get_all_students():
     students = await student_collection.find().to_list(length=None)
     return students
 
-# Tek bir öğrenciyi ID ile getir
-async def get_student_by_id(student_id: str):
-    student = await student_collection.find_one({"_id": ObjectId(student_id)})
+async def get_student_by_id(student_id: int):
+    student = await student_collection.find_one({"student_id": student_id})  # Match by student_id, not _id
     return student
 
 # Yeni bir öğrenci ekle
