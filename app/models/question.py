@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 from typing import Optional
 from bson import ObjectId
 
-class QuestionDifficulty(BaseModel):
+class Question(BaseModel):
     id: Optional[str] = Field(alias="_id", default=None)  # MongoDB için _id
     question_id: str  # Backend’deki soru ID’si
     subject_id: str  # Sorunun ait olduğu konu
