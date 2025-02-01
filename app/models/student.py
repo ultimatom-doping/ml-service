@@ -2,7 +2,6 @@ from pydantic import BaseModel, Field
 from bson import ObjectId
 from typing import Optional, Dict
 
-
 class PyObjectId(ObjectId):
     @classmethod
     def _get_validators_(cls):
@@ -11,20 +10,31 @@ class PyObjectId(ObjectId):
     @classmethod
     def validate(cls, v):
         if not ObjectId.is_valid(v):
-            raise ValueError("Invalid ObjectId")
+            raise ValueError("Invalid objectid")
         return ObjectId(v)
 
     @classmethod
-    def _modify_schema_(cls, field_schema):
-        field_schema.update(type="string")
+    def _get_pydantic_core_schema_(cls, _source_type, _handler):
+        return {
+            'type': 'custom',
+            'custom_type_name': 'objectid',
+            'encoding': 'str',
+            'serialization': str,
+            'validation': cls.validate,
+        }
 
 class Student(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     student_id: int
     subject_scores: Dict[str, float] = {}
-    # Diğer alanlar...
 
     class Config:
-        allow_population_by_field_name = True
+        populate_by_name = True
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
+
+class StudentUpdate(BaseModel):
+    subject_scores: Optional[Dict[str, float]] = None
+
+    class Config:
+        arbitrary_types_allowed = True

@@ -1,6 +1,8 @@
 from app.db.database import student_collection
-from app.models.student import Student
+from app.models.student import Student, StudentUpdate
 from bson import ObjectId
+
+from fastapi import HTTPException
 
 def serialize_document(doc):
     doc['_id'] = str(doc['_id'])
@@ -22,12 +24,24 @@ async def create_student(student: Student):
     result = await student_collection.insert_one(student.dict(by_alias=True))
     return str(result.inserted_id)
 
-# Öğrenciyi güncelle
-async def update_student(student_id: int, data: dict):
+async def update_student(student_id: int, data: StudentUpdate):
+    update_data = {}
+    
+    # subject_scores'u işle
+    if data.subject_scores:
+        for subject, score in data.subject_scores.items():
+            if score is not None:
+                update_data[f"subject_scores.{subject}"] = score
+
+    if not update_data:
+        raise HTTPException(status_code=400, detail="No valid update data provided")
+    
     result = await student_collection.update_one(
-        {"student_id": student_id}, {"$set": data}
+        {"student_id": student_id}, {"$set": update_data}
     )
-    return result.modified_count > 0
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Student not found")
+    return True
 
 # Öğrenciyi sil
 async def delete_student(student_id: int):

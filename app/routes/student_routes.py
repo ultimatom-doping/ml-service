@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from app.models.student import Student
+from app.models.student import Student, StudentUpdate
 from app.services.student_service import (
     get_all_students, get_student_by_id, create_student, update_student, delete_student
 )
@@ -22,12 +22,10 @@ async def add_student(student: Student):
     student_id = await create_student(student)
     return {"id": student_id, "message": "Student created successfully"}
 
-@router.put("/students/{student_id}")
-async def modify_student(student_id: int, student: Student):
-    success = await update_student(student_id, student.dict(by_alias=True))
-    if not success:
-        raise HTTPException(status_code=404, detail="Student not found")
-    return {"message": "Student updated successfully"}
+@router.put("/students/{student_id}", response_model=bool)
+async def update_student_endpoint(student_id: int, student_update: StudentUpdate):
+    result = await update_student(student_id, student_update)
+    return True
 
 @router.delete("/students/{student_id}")
 async def remove_student(student_id: int):
