@@ -9,7 +9,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 4️⃣ Servis dosyalarını kopyala
-COPY ./app/ app/
+COPY . .
 
 # 5️⃣ Servisi başlat
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
