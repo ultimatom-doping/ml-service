@@ -23,14 +23,14 @@ async def add_student(student: Student):
     return {"id": student_id, "message": "Student created successfully"}
 
 @router.put("/students/{student_id}")
-async def modify_student(student_id: str, student: Student):
+async def modify_student(student_id: int, student: Student):
     success = await update_student(student_id, student.dict(by_alias=True))
     if not success:
         raise HTTPException(status_code=404, detail="Student not found")
     return {"message": "Student updated successfully"}
 
 @router.delete("/students/{student_id}")
-async def remove_student(student_id: str):
+async def remove_student(student_id: int):
     success = await delete_student(student_id)
     if not success:
         raise HTTPException(status_code=404, detail="Student not found")
