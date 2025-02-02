@@ -24,7 +24,8 @@ class Question(BaseModel):
     id: Optional[PyObjectId] = Field(default_factory=PyObjectId, alias="_id")
     question_id: int
     subject_id: int
-    difficulty: float = 0.0  # Sorunun zorluk endeksi (0-1 arası)
+    difficulty: float = 0.0
+    confidence: float = 0.0
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -35,5 +36,6 @@ class Question(BaseModel):
 class QuestionUpdate(BaseModel):
     subject_id: Optional[int] = None
     difficulty: Optional[float] = None
+    confidence: Optional[float] = None
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
