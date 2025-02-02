@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from app.models.student import Student, StudentUpdate
 from app.services.student_service import (
-    get_all_students, get_student_by_id, create_student, update_student, delete_student, get_suggested_question
+    get_all_students, get_student_by_id, create_student, update_student, delete_student
 )
 from app.services.success_evaluator import (
     trigger_job
