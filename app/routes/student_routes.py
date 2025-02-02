@@ -3,6 +3,9 @@ from app.models.student import Student, StudentUpdate
 from app.services.student_service import (
     get_all_students, get_student_by_id, create_student, update_student, delete_student
 )
+from app.services.success_evaluator import (
+    trigger_job
+)
 
 router = APIRouter()
 
@@ -33,3 +36,13 @@ async def remove_student(student_id: int):
     if not success:
         raise HTTPException(status_code=404, detail="Student not found")
     return {"message": "Student deleted successfully"}
+
+@router.post("/students/trigger")
+async def trigger():
+    success_df = await trigger_job()
+
+    if success_df is not None:
+        result = success_df.to_dict(orient="records")
+        return result
+    
+    raise HTTPException(status_code=404, detail="Trigger failed")
