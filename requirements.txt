@@ -3,3 +3,5 @@ uvicorn
 motor  
 pymongo[srv]
 python-dotenv
+requests
+pandas
