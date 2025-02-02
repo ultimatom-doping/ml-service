@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from app.models.student import Student, StudentUpdate
 from app.services.student_service import (
-    get_all_students, get_student_by_id, create_student, update_student, delete_student
+    get_all_students, get_student_by_id, create_student, update_student, delete_student, get_suggested_question
 )
 from app.services.success_evaluator import (
     trigger_job
@@ -46,3 +46,7 @@ async def trigger():
         return result
     
     raise HTTPException(status_code=404, detail="Trigger failed")
+
+# @router.get("/students/{student_id}/suggest-question/{subject_id}")
+# async def fetch_suggested_question(student_id: int, subject_id: int):
+#     return await get_suggested_question(student_id, subject_id)

@@ -21,7 +21,17 @@ async def get_student_by_id(student_id: int):
 
 # Yeni bir öğrenci ekle
 async def create_student(student: Student):
-    result = await student_collection.insert_one(student.dict(by_alias=True))
+    """
+    Convert the Pydantic model to a dict, then rename the 'subject_id' key to '_subject_id'.
+    Finally, insert into MongoDB.
+    """
+    doc = student.dict(by_alias=True)
+    
+    # If you want the key "subject_id" to become "_subject_id" in Mongo:
+    if "subject_id" in doc:
+        doc["_subject_id"] = doc.pop("subject_id")
+    
+    result = await student_collection.insert_one(doc)
     return str(result.inserted_id)
 
 async def update_student(student_id: int, data: StudentUpdate):
@@ -47,3 +57,20 @@ async def update_student(student_id: int, data: StudentUpdate):
 async def delete_student(student_id: int):
     result = await student_collection.delete_one({"student_id": student_id})
     return result.deleted_count > 0
+
+# async def get_suggested_question(student_id, subject_id):
+#     student = await student_collection.find_one({"student_id": student_id})
+#     if student is None:
+#         raise HTTPException(status_code=404, detail="Student not found")
+    
+#     subject_scores = student["subject_scores"]
+#     if subject_id not in subject_scores:
+#         raise HTTPException(status_code=404, detail="Subject not found")
+
+#     subject_score = subject_scores[subject_id]
+
+#     question = await question_collection.find_one(
+#         {"subject_id": subject_id, "difficulty": {"$gte": subject_score}}
+#     )
+
+#     return question
