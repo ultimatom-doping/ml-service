@@ -21,7 +21,7 @@ def success_evaluator_for_all(df2):
     df_merged["score"] = df_merged.apply(calculate_score, axis=1)
     
     # Öğrencinin ortalama puanını hesaplama
-    student_scores = df_merged.groupby(["student_id", "subject", "cluster"])["score"].mean().reset_index().groupby('student_id', 'subject')['score'].mean().reset_index()
+    student_scores = df_merged.groupby(["student_id", "subject", "cluster"])["score"].mean().reset_index().groupby('student_id', 'subject')['score'].sum().reset_index()
 
     return student_scores
 
