@@ -7,6 +7,11 @@ import math
 def calculate_confidence_score(total_attempts):
     return min(math.log(total_attempts, 5) / 3, 1)
 
+def update_function(prev_score, new_score):
+    lr = 0.1
+    updated_score = prev_score*lr + new_score(1-lr)
+    return updated_score
+
 def difficulty_calculator(questions):
     df = pd.DataFrame(questions)
     df['total_attempts'] = df['correct_attempts'] + df['incorrect_attempts'] + df['empty_attempts']
@@ -24,18 +29,16 @@ def difficulty_calculator(questions):
     new_cluster_mapping = sort_difficulty_clusters(df)
     df["difficulty_cluster"] = df["difficulty_cluster"].map(new_cluster_mapping)
 
-    # Return a list of dicts
     return df.to_dict(orient="records")
 
 async def trigger_job():
-    questions = await get_all_questions()  # This is presumably a list of dict
-    result = difficulty_calculator(questions)  # Now returns a list of dict
+    questions = await get_all_questions()
+    result = difficulty_calculator(questions)
     return result
 
 def sort_difficulty_clusters(df_w_clusters):
     cluster_difficulty_means = df_w_clusters.groupby("difficulty_cluster")["difficulty"].mean()
 
-    # Ortalamalara göre küçükten büyüğe sıralama yap ve yeni cluster numaralarını oluştur
     sorted_clusters = cluster_difficulty_means.sort_values().index
     new_cluster_mapping = {old: new for new, old in enumerate(sorted_clusters)}
 

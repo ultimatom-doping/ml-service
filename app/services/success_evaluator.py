@@ -21,6 +21,11 @@ def calculate_score(row):
     
     return score
 
+def update_function(prev_score, new_score):
+    lr = 0.1
+    updated_score = prev_score*lr + new_score(1-lr)
+    return updated_score
+
 def success_evaluator_for_all(questions_ml, questions_be):
     df2 = pd.DataFrame(questions_be)
     df = pd.DataFrame(questions_ml)
