@@ -25,6 +25,7 @@ class Question(BaseModel):
     question_id: int
     subject_id: int
     difficulty: float = 0.0
+    difficulty_cluster: int = 0
     confidence: float = 0.0
 
     model_config = ConfigDict(
