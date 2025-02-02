@@ -27,6 +27,9 @@ class Question(BaseModel):
     difficulty: float = 0.0
     difficulty_cluster: int = 0
     confidence: float = 0.0
+    correct_attempts: int = 0
+    incorrect_attempts: int = 0
+    empty_attempts: int = 0
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -38,5 +41,8 @@ class QuestionUpdate(BaseModel):
     subject_id: Optional[int] = None
     difficulty: Optional[float] = None
     confidence: Optional[float] = None
+    correct_attempts: Optional[int] = None
+    incorrect_attempts: Optional[int] = None
+    empty_attempts: Optional[int] = None
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
