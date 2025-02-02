@@ -7,6 +7,7 @@ from app.services.question_service import (
     update_question,
     delete_question,
 )
+from app.services.difficulty_calculator import trigger_job
 
 router = APIRouter()
 
@@ -37,3 +38,10 @@ async def remove_question(question_id: int):
     if not success:
         raise HTTPException(status_code=404, detail="Question not found")
     return {"message": "Question deleted successfully"}
+
+@router.post("/questions/trigger")
+async def trigger():
+    success_data = await trigger_job()
+    if success_data is not None:
+        return success_data
+    raise HTTPException(status_code=404, detail="Trigger failed")
